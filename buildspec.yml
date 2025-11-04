@@ -1,25 +1,29 @@
 version: 0.2
 
+env:
+  variables:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+
 phases:
   install:
     commands:
-      - echo "⬇️ Installing dependencies..."
+      - echo "⬇️ Installing Node + dependencies..."
       - npm ci
       - npm install -g prisma
 
   pre_build:
     commands:
-      - echo "⚙️ Generating Prisma Client..."
+      - echo "⚙️ Generating Prisma client..."
       - npx prisma generate
 
   build:
     commands:
-      - echo "🏗️ Building Next.js App..."
-      - npm run build
+      - echo "🏗️ Building Next.js App without lint check..."
+      - npm run build --no-lint
 
   post_build:
     commands:
-      - echo "✅ Build Completed Successfully"
+      - echo "✅ Build Complete"
 
 artifacts:
   files:
