@@ -6,8 +6,8 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const reqHeaders = headers(); // ✅ Get request headers for auth
-  await adminAuth(reqHeaders); // ✅ Pass headers to adminAuth
+  const reqHeaders = headers(); // ✅ get request headers
+  await adminAuth(reqHeaders);  // ✅ pass headers to adminAuth
 
   return <>{children}</>;
 }
