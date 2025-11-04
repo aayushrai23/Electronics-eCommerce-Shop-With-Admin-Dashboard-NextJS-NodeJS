@@ -1,24 +1,20 @@
 import { ProductItem, SectionTitle } from "@/components";
 import apiClient from "@/lib/api";
-import React from "react";
 import { sanitize } from "@/lib/sanitize";
 
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams?: { search?: string };
+  searchParams: { search?: string };
 }) {
-  const query = searchParams?.search || "";
+  const query = searchParams.search ?? "";
   let products: any[] = [];
 
   try {
-    const data = await apiClient.get(`/api/search?query=${query}`);
-
-    if (!data.ok) {
-      console.error("Failed to fetch search results:", data.statusText);
-    } else {
-      const result = await data.json();
-      products = Array.isArray(result) ? result : [];
+    const res = await apiClient.get(`/api/search?query=${query}`);
+    if (res.ok) {
+      const data = await res.json();
+      products = Array.isArray(data) ? data : [];
     }
   } catch (error) {
     console.error("Error fetching search results:", error);
@@ -33,6 +29,7 @@ export default async function SearchPage({
             Showing results for {sanitize(query)}
           </h3>
         )}
+
         <div className="grid grid-cols-4 justify-items-center gap-x-2 gap-y-5 max-[1300px]:grid-cols-3 max-lg:grid-cols-2 max-[500px]:grid-cols-1">
           {products.length > 0 ? (
             products.map((product: any) => (
