@@ -1,17 +1,14 @@
 "use client";
+
 import { DashboardSidebar } from "@/components";
 import { isValidEmailAddressFormat } from "@/lib/utils";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { sanitizeFormData } from "@/lib/form-sanitize";
-import apiClient from "@/lib/api";
+import apiClient from "@/lib/api";  // ✅ Added
 
 const DashboardCreateNewUser = () => {
-  const [userInput, setUserInput] = useState<{
-    email: string;
-    password: string;
-    role: string;
-  }>({
+  const [userInput, setUserInput] = useState({
     email: "",
     password: "",
     role: "user",
@@ -23,32 +20,29 @@ const DashboardCreateNewUser = () => {
       return;
     }
 
-    // Sanitize form data
+    // Sanitize input
     const sanitizedUserInput = sanitizeFormData(userInput);
 
-    if (!isValidEmailAddressFormat(sanitizedUserInput.email)) {
-      toast.error("You entered an invalid email address");
+    if (!isValidEmailAddressFormat(userInput.email)) {
+      toast.error("You entered invalid email address format");
       return;
     }
 
-    if (sanitizedUserInput.password.length <= 7) {
+    if (userInput.password.length < 8) {
       toast.error("Password must be longer than 7 characters");
       return;
     }
 
     try {
-      const res = await apiClient.post(`/api/users`, {
-        body: JSON.stringify(sanitizedUserInput),
-      });
+      const response = await apiClient.post("/api/users", sanitizedUserInput);
 
-      if (res.status === 201) {
+      if (response.status === 201) {
         toast.success("User added successfully");
         setUserInput({ email: "", password: "", role: "user" });
       } else {
         toast.error("Error while creating user");
       }
     } catch (error) {
-      console.error("User create error", error);
       toast.error("Error while creating user");
     }
   };
@@ -56,31 +50,42 @@ const DashboardCreateNewUser = () => {
   return (
     <div className="bg-white flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5">
       <DashboardSidebar />
+
       <div className="flex flex-col gap-y-7 xl:pl-5 max-xl:px-5 w-full">
         <h1 className="text-3xl font-semibold">Add new user</h1>
 
         <label className="form-control w-full max-w-xs">
-          <div className="label"><span className="label-text">Email:</span></div>
+          <div className="label">
+            <span className="label-text">Email:</span>
+          </div>
           <input
             type="email"
             className="input input-bordered w-full max-w-xs"
             value={userInput.email}
-            onChange={(e) => setUserInput({ ...userInput, email: e.target.value })}
+            onChange={(e) =>
+              setUserInput({ ...userInput, email: e.target.value })
+            }
           />
         </label>
 
         <label className="form-control w-full max-w-xs">
-          <div className="label"><span className="label-text">Password:</span></div>
+          <div className="label">
+            <span className="label-text">Password:</span>
+          </div>
           <input
             type="password"
             className="input input-bordered w-full max-w-xs"
             value={userInput.password}
-            onChange={(e) => setUserInput({ ...userInput, password: e.target.value })}
+            onChange={(e) =>
+              setUserInput({ ...userInput, password: e.target.value })
+            }
           />
         </label>
 
         <label className="form-control w-full max-w-xs">
-          <div className="label"><span className="label-text">User role:</span></div>
+          <div className="label">
+            <span className="label-text">User role:</span>
+          </div>
           <select
             className="select select-bordered"
             value={userInput.role}
@@ -93,7 +98,7 @@ const DashboardCreateNewUser = () => {
 
         <button
           type="button"
-          className="uppercase bg-blue-500 px-10 py-5 text-lg border border-gray-300 font-bold text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2"
+          className="uppercase bg-blue-500 px-10 py-5 text-lg border border-gray-300 font-bold text-white shadow-sm hover:bg-blue-600"
           onClick={addNewUser}
         >
           Create user
