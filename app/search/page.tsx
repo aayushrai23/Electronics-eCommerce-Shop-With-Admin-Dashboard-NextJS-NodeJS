@@ -1,11 +1,9 @@
 import { ProductItem, SectionTitle } from "@/components";
 import apiClient from "@/lib/api";
 import { sanitize } from "@/lib/sanitize";
-import { PageProps } from "next"; // ✅ Import the correct Next.js type
+import type { PageProps } from "next";
 
-export default async function SearchPage({
-  searchParams,
-}: PageProps) {
+export default async function SearchPage({ searchParams }: PageProps) {
   const query = (searchParams?.search as string) ?? "";
   let products: any[] = [];
 
@@ -22,6 +20,7 @@ export default async function SearchPage({
   return (
     <div>
       <SectionTitle title="Search Page" path="Home | Search" />
+
       <div className="max-w-screen-2xl mx-auto">
         {query && (
           <h3 className="text-4xl text-center py-10 max-sm:text-3xl">
@@ -36,7 +35,7 @@ export default async function SearchPage({
             ))
           ) : (
             <h3 className="text-3xl mt-5 text-center w-full col-span-full max-[1000px]:text-2xl max-[500px]:text-lg">
-              No products found for specified query
+              No products found
             </h3>
           )}
         </div>
