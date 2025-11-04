@@ -1,13 +1,12 @@
 import { ProductItem, SectionTitle } from "@/components";
 import apiClient from "@/lib/api";
 import { sanitize } from "@/lib/sanitize";
+import { PageProps } from "next"; // ✅ Import the correct Next.js type
 
 export default async function SearchPage({
   searchParams,
-}: {
-  searchParams: { search?: string };
-}) {
-  const query = searchParams.search ?? "";
+}: PageProps) {
+  const query = (searchParams?.search as string) ?? "";
   let products: any[] = [];
 
   try {
