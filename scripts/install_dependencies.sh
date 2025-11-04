@@ -1,6 +1,6 @@
 #!/bin/bash
+echo "📦 Installing dependencies..."
 cd /home/ubuntu/app
-echo "Installing dependencies..."
-npm install
+npm ci
 npm install -g prisma
 npx prisma generate

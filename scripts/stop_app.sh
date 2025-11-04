@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "Stopping any running app..."
-sudo pkill -f "next start" || true
+echo "🛑 Stopping existing Next.js app..."
+pkill -f "next start" || true
